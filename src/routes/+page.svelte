@@ -25,9 +25,10 @@
     fabricCanvas = new fabric.Canvas(canvas, {
       width: window.innerWidth,
       height: window.innerHeight,
-      selection: false, // Disable group selection
-      interactive: false // Ensure interactivity is enabled
-      // objectCaching: false
+      selection: false,
+      interactive: false,
+      enablePointerEvents: true
+      // allowTouchScrolling: false
     });
 
     // Load your background image
@@ -64,48 +65,60 @@
      * Event listeners
      */
     // Enable panning
-    fabricCanvas.on('mouse:down', (opt) => {
-      const evt = opt.e;
-      fabricCanvas.isDragging = true;
-      fabricCanvas.lastPosX = evt.clientX;
-      fabricCanvas.lastPosY = evt.clientY;
-    });
+    fabricCanvas.on('mouse:down', handleMouseDown);
+    fabricCanvas.on('mouse:move', handleMouseMove);
+    fabricCanvas.on('mouse:up', handleMouseUp);
 
-    fabricCanvas.on('mouse:move', (opt) => {
+    function handleMouseDown(opt) {
+      const evt = opt.e;
+      startDragging(evt.clientX, evt.clientY);
+    }
+
+    function handleMouseMove(opt) {
       if (fabricCanvas.isDragging) {
         const evt = opt.e;
-        const vpt = fabricCanvas.viewportTransform;
-
-        // Calculate the new position
-        let newX = vpt[4] + evt.clientX - fabricCanvas.lastPosX;
-        let newY = vpt[5] + evt.clientY - fabricCanvas.lastPosY;
-
-        // Limit the dragging within the image boundaries
-        const maxX = 0;
-        const minX = fabricCanvas.width - imgWidth;
-        const maxY = 0;
-        const minY = fabricCanvas.height - imgHeight;
-
-        newX = Math.min(Math.max(newX, minX), maxX);
-        newY = Math.min(Math.max(newY, minY), maxY);
-
-        // Update the viewport transform
-        vpt[4] = newX;
-        vpt[5] = newY;
-
-        fabricCanvas.requestRenderAll();
-        fabricCanvas.lastPosX = evt.clientX;
-        fabricCanvas.lastPosY = evt.clientY;
-
-        fabricCanvas.forEachObject((obj) => {
-          obj.setCoords();
-        });
+        moveCanvas(evt.clientX, evt.clientY);
       }
-    });
+    }
 
-    fabricCanvas.on('mouse:up', () => {
+    function handleMouseUp() {
       fabricCanvas.isDragging = false;
-    });
+    }
+
+    function startDragging(x, y) {
+      fabricCanvas.isDragging = true;
+      fabricCanvas.lastPosX = x;
+      fabricCanvas.lastPosY = y;
+    }
+
+    function moveCanvas(x, y) {
+      const vpt = fabricCanvas.viewportTransform;
+
+      // Calculate the new position
+      let newX = vpt[4] + x - fabricCanvas.lastPosX;
+      let newY = vpt[5] + y - fabricCanvas.lastPosY;
+
+      // Limit the dragging within the image boundaries
+      const maxX = 0;
+      const minX = fabricCanvas.width - imgWidth;
+      const maxY = 0;
+      const minY = fabricCanvas.height - imgHeight;
+
+      newX = Math.min(Math.max(newX, minX), maxX);
+      newY = Math.min(Math.max(newY, minY), maxY);
+
+      // Update the viewport transform
+      vpt[4] = newX;
+      vpt[5] = newY;
+
+      fabricCanvas.requestRenderAll();
+      fabricCanvas.lastPosX = x;
+      fabricCanvas.lastPosY = y;
+
+      fabricCanvas.forEachObject((obj) => {
+        obj.setCoords();
+      });
+    }
 
     // Resize canvas when window is resized
     window.addEventListener('resize', updateCanvasSize);
