@@ -27,6 +27,7 @@
       height: window.innerHeight,
       selection: false, // Disable group selection
       interactive: false // Ensure interactivity is enabled
+      // objectCaching: false
     });
 
     // Load your background image
@@ -95,6 +96,10 @@
         fabricCanvas.requestRenderAll();
         fabricCanvas.lastPosX = evt.clientX;
         fabricCanvas.lastPosY = evt.clientY;
+
+        fabricCanvas.forEachObject((obj) => {
+          obj.setCoords();
+        });
       }
     });
 
@@ -190,7 +195,7 @@
         });
       });
 
-      group.on('mousedown', function () {
+      group.on('mouseup', function () {
         window.open(BLOG_URL, '_blank');
       });
 
@@ -261,8 +266,6 @@
 
       // Add hover effect
       group.on('mouseover', () => {
-        console.log('-------------GM HOVER');
-
         group.animate('top', group.top - 10, {
           duration: 200,
           onChange: fabricCanvas.renderAll.bind(fabricCanvas),
@@ -278,7 +281,7 @@
         });
       });
 
-      group.on('mousedown', function () {
+      group.on('mouseup', function () {
         window.open(GM_SUI_URL, '_blank');
       });
 
