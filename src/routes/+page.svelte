@@ -3,7 +3,7 @@
   import { fabric } from 'fabric';
 
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-  import { BLOG_URL, GM_SUI_URL } from '$lib/shared/shared.constant';
+  import { BLOG_URL, GITHUB_URL, GM_SUI_URL } from '$lib/shared/shared.constant';
   import PlayMat from '$lib/assets/play-mat.png';
   import PencilBox from '$lib/assets/pencil-box.png';
   import GmSui from '$lib/assets/gm-sui.png';
@@ -329,7 +329,7 @@
 
     <!-- Github icon -->
     <a
-      href="https://github.com/yourusername"
+      href={GITHUB_URL}
       target="_blank"
       rel="noopener noreferrer"
       class="text-gray-800 transition-all duration-300 ease-in-out hover:text-blue-600"
