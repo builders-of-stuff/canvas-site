@@ -3,10 +3,17 @@
   import { fabric } from 'fabric';
 
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-  import { BLOG_URL, GITHUB_URL, GM_SUI_URL } from '$lib/shared/shared.constant';
+  import {
+    BLOG_URL,
+    GITHUB_URL,
+    GM_SUI_URL,
+    PLAY_MAT_HEIGHT,
+    PLAY_MAT_WIDTH
+  } from '$lib/shared/shared.constant';
   import PlayMat from '$lib/assets/play-mat.png';
   import PencilBox from '$lib/assets/pencil-box.png';
   import GmSui from '$lib/assets/gm-sui.png';
+  import { calculateRelativePosition } from '$lib/shared/shared-tools';
   // import GmSui from '$lib/assets/gm-sui.svg';
 
   let canvas;
@@ -58,7 +65,7 @@
         (fabricCanvas.height - img.height * scaleFactor) / 2;
 
       fabricCanvas.renderAll();
-      addInteractiveAreas();
+      addInteractiveAreas(imgWidth, imgHeight);
     });
 
     /**
@@ -131,17 +138,19 @@
   /**
    * Interactive areas
    */
-  function addInteractiveAreas() {
+  function addInteractiveAreas(imgWidth, imgHeight) {
     /**
      * Blog
      */
+    const blogPosition = calculateRelativePosition(560, 260, imgWidth, imgHeight);
+
     fabric.Image.fromURL(PencilBox, (img) => {
       // Set image properties
       img.set({
-        left: 875,
-        top: 400,
-        scaleX: 1.6, // Adjust scale as needed
-        scaleY: 1.6, // Adjust scale as needed
+        left: blogPosition.left,
+        top: blogPosition.top,
+        scaleX: (1 * imgWidth) / PLAY_MAT_WIDTH,
+        scaleY: (1 * imgHeight) / PLAY_MAT_HEIGHT,
         selectable: false,
         evented: true,
         hoverCursor: 'pointer'
@@ -221,13 +230,15 @@
     /**
      * GM Sui
      */
+    const gmSuiPosition = calculateRelativePosition(500, 140, imgWidth, imgHeight);
+
     fabric.Image.fromURL(GmSui, (img) => {
       // Set image properties
       img.set({
-        left: 800,
-        top: 225,
-        scaleX: 1.2, // Adjust scale as needed
-        scaleY: 1.2, // Adjust scale as needed
+        left: gmSuiPosition.left,
+        top: gmSuiPosition.top,
+        scaleX: (1.35 * imgWidth) / 1920,
+        scaleY: (1.35 * imgHeight) / 1080,
         selectable: false,
         evented: true,
         hoverCursor: 'pointer'
