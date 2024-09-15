@@ -8,11 +8,13 @@
     GITHUB_URL,
     GM_SUI_URL,
     PLAY_MAT_HEIGHT,
-    PLAY_MAT_WIDTH
+    PLAY_MAT_WIDTH,
+    WALRUS_GAME_URL
   } from '$lib/shared/shared.constant';
   import PlayMat from '$lib/assets/play-mat.png';
   import PencilBox from '$lib/assets/pencil-box.png';
   import GmSui from '$lib/assets/gm-sui.png';
+  import Walrus from '$lib/assets/walrus-250.png';
   import { calculateRelativePosition } from '$lib/shared/shared-tools';
   // import GmSui from '$lib/assets/gm-sui.svg';
 
@@ -314,6 +316,94 @@
       group.bringToFront();
       fabricCanvas.renderAll();
     });
+
+    /**
+     * Walrus game
+     */
+    const walrusGamePosition = calculateRelativePosition(300, 260, imgWidth, imgHeight);
+
+    fabric.Image.fromURL(Walrus, (img) => {
+      // Set image properties
+      img.set({
+        left: walrusGamePosition.left,
+        top: walrusGamePosition.top,
+        scaleX: (0.5 * imgWidth) / PLAY_MAT_WIDTH,
+        scaleY: (0.5 * imgHeight) / PLAY_MAT_HEIGHT,
+        selectable: false,
+        evented: true,
+        hoverCursor: 'pointer'
+      });
+
+      const labelText = new fabric.Text('Walrus game (testnet)', {
+        fontSize: 16,
+        fontFamily: 'Helvetica, Arial, sans-serif',
+        fontWeight: '600',
+        fill: '#2c3e50',
+        originX: 'center',
+        originY: 'center'
+      });
+
+      const labelBackground = new fabric.Rect({
+        width: labelText.width + 32,
+        height: labelText.height + 16,
+        fill: 'white',
+        rx: 8,
+        ry: 8,
+        stroke: 'black',
+        strokeWidth: 2.5,
+        shadow: new fabric.Shadow({
+          color: 'rgba(0,0,0,0.1)',
+          blur: 8,
+          offsetX: 0,
+          offsetY: 4
+        })
+      });
+
+      const label = new fabric.Group([labelBackground, labelText], {
+        left: img.left + (img.width * img.scaleX) / 2.1,
+        top: img.top - 35,
+        originX: 'center',
+        originY: 'center'
+      });
+
+      // Center text in background
+      labelText.set({
+        left: labelBackground.width / 5,
+        top: labelBackground.height / 6
+      });
+
+      const group = new fabric.Group([img, label], {
+        selectable: false,
+        evented: true,
+        hoverCursor: 'pointer'
+      });
+
+      // Add hover effect
+      group.on('mouseover', () => {
+        group.animate('top', group.top - 10, {
+          duration: 200,
+          onChange: fabricCanvas.renderAll.bind(fabricCanvas),
+          easing: fabric.util.ease.easeOutCubic
+        });
+      });
+
+      group.on('mouseout', () => {
+        group.animate('top', group.top + 10, {
+          duration: 200,
+          onChange: fabricCanvas.renderAll.bind(fabricCanvas),
+          easing: fabric.util.ease.easeOutCubic
+        });
+      });
+
+      group.on('mouseup', function () {
+        window.open(WALRUS_GAME_URL, '_blank');
+      });
+
+      // Add the image to the canvas
+      fabricCanvas.add(group);
+      group.bringToFront();
+      fabricCanvas.renderAll();
+    });
   }
 </script>
 
@@ -344,6 +434,9 @@
 
       <DropdownMenu.Content>
         <DropdownMenu.Group>
+          <a href={WALRUS_GAME_URL} target="_blank">
+            <DropdownMenu.Item>Walrus game (testnet)</DropdownMenu.Item>
+          </a>
           <a href={BLOG_URL} target="_blank">
             <DropdownMenu.Item>Blog</DropdownMenu.Item>
           </a>
