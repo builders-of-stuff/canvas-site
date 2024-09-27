@@ -9,6 +9,7 @@
     GM_SUI_URL,
     PLAY_MAT_HEIGHT,
     PLAY_MAT_WIDTH,
+    SUIPRISE_URL,
     WALRUS_GAME_URL
   } from '$lib/shared/shared.constant';
   import PlayMat from '$lib/assets/play-mat.png';
@@ -434,14 +435,17 @@
 
       <DropdownMenu.Content>
         <DropdownMenu.Group>
-          <a href={WALRUS_GAME_URL} target="_blank">
-            <DropdownMenu.Item>Walrus game (testnet)</DropdownMenu.Item>
-          </a>
           <a href={BLOG_URL} target="_blank">
             <DropdownMenu.Item>Blog</DropdownMenu.Item>
           </a>
           <a href={GM_SUI_URL} target="_blank">
             <DropdownMenu.Item>GM Sui</DropdownMenu.Item>
+          </a>
+          <a href={WALRUS_GAME_URL} target="_blank">
+            <DropdownMenu.Item>Walrus game (testnet)</DropdownMenu.Item>
+          </a>
+          <a href={SUIPRISE_URL} target="_blank">
+            <DropdownMenu.Item>Suiprise</DropdownMenu.Item>
           </a>
         </DropdownMenu.Group>
       </DropdownMenu.Content>
